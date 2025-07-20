@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supervisor Audit Logs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #002147;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #003366;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      border-bottom: 3px solid #FFD700;
+    }
+
+    .container {
+      max-width: 95%;
+      margin: 30px auto;
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      min-width: 250px;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .btn {
+      background-color: #DA121A;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #b40f15;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #003366;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    @media (max-width: 600px) {
+      .search-bar {
+        flex-direction: column;
+      }
+
+      .search-bar input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Audit Trail - Supervisor View</div>
+
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by action, badge number or name..." oninput="filterLogs()">
+      <button class="btn" onclick="loadAuditLogs()">Refresh</button>
+    </div>
+
+    <table id="auditTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Officer</th>
+          <th>Badge No</th>
+          <th>Rank</th>
+          <th>Action</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Logs go here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadAuditLogs() {
+      fetch('fetch_supervisor_logs.php') // this PHP file should return logs relevant to supervisor
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#auditTable tbody');
+          tbody.innerHTML = '';
+
+          data.forEach(log => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${log.timestamp}</td>
+              <td>${log.fullname}</td>
+              <td>${log.badge_number}</td>
+              <td>${log.rank}</td>
+              <td>${log.action}</td>
+              <td>${log.description}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => {
+          alert("Failed to load logs.");
+          console.error(err);
+        });
+    }
+
+    function filterLogs() {
+      const value = document.getElementById("searchInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#auditTable tbody tr");
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(value) ? "" : "none";
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadAuditLogs);
+  </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Officer Dashboard</title>
+  <style>
+    :root {
+      --police-blue: #003366;
+      --police-red: #d7261e;
+      --police-gold: #ffd700;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+    }
+
+    .header {
+      background-color: var(--police-blue);
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .container {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+      width: 200px;
+      background: var(--police-red);
+      color: #fff;
+      padding: 20px;
+      height: 100%;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h3 {
+      font-size: 18px;
+      margin-top: 0;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      background: #fff;
+      overflow-y: auto;
+    }
+
+    .notifications, .summary, .occurrences, .recent-activity {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .notifications h3,
+    .occurrences h2,
+    .recent-activity h3 {
+      margin-top: 0;
+    }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .card {
+      background: #fff;
+      flex: 1;
+      margin: 10px;
+      padding: 15px;
+      border: 2px solid var(--police-blue);
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    ul { list-style-type: none; padding: 0; }
+    li { border-bottom: 1px solid #eee; padding: 10px 0; }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: var(--police-blue);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover { background-color: #002244; }
+
+    .hamburger {
+      display: none;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: white;
+      z-index: 1000;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        bottom: 0;
+        width: 200px;
+        transform: translateX(-100%);
+        z-index: 999;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <h1>Officer Dashboard</h1>
+    <p><marquee>Welcome, Officer <span id="officer-name">[Name]</span> | Rank: <span id="officer-rank">[Rank]</span></marquee></p>
+  </div>
+
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <h3>Navigation</h3>
+      <a href="new_occurrence_entry.html">New Occurrence</a>
+      <a href="records.php">Records</a>
+      <a href="officer_profile.php">Profile</a>
+      <a href="logout.php">Logout</a>
+    </div>
+
+    <div class="main-content">
+      <div class="notifications">
+        <h3>Notifications</h3>
+        <ul id="notification-list">
+          <li>Loading notifications...</li>
+        </ul>
+      </div>
+
+      <div class="summary">
+        <div class="card">
+          <h2>Total Occurrences</h2>
+          <p id="total-occurrences">--</p>
+        </div>
+        <div class="card">
+          <h2>Pending Actions</h2>
+          <p id="pending-actions">--</p>
+        </div>
+        <div class="card">
+          <h2>Recent Activity</h2>
+          <p id="latest-activity">Updates below</p>
+        </div>
+      </div>
+
+      <div class="recent-activity">
+        <h3>Log Recent Activity</h3>
+        <form id="activity-form">
+          <input type="text" name="ob_number" placeholder="OB Number" required />
+          <textarea name="activity" placeholder="Describe your recent action..." required></textarea>
+          <button type="submit">Submit Activity</button>
+          <p id="activity-msg" style="color: green;"></p>
+        </form>
+      </div>
+
+      <div class="occurrences">
+        <h2>Today's Occurrences</h2>
+        <ul id="today-occurrences">
+          <li>Loading today's occurrences...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchNotifications();
+      fetchSummaryStats();
+      fetchTodayOccurrences();
+      fetchLatestActivity();
+
+      document.getElementById('activity-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch('record_activity.php', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        document.getElementById('activity-msg').textContent = data.message;
+        if (data.latest) updateRecentActivityCard(data.latest);
+        fetchLatestActivity(); // Refresh
+        e.target.reset();
+      });
+    });
+
+    async function fetchNotifications() {
+      const res = await fetch('get_notifications.php');
+      const data = await res.json();
+      const list = document.getElementById('notification-list');
+      list.innerHTML = '';
+      if (Array.isArray(data) && data.length > 0) {
+        data.forEach(n => {
+          const li = document.createElement('li');
+          li.textContent = `OB${n.ob_number} is assigned to you. Remarks: ${n.remarks}`;
+          list.appendChild(li);
+        });
+      } else {
+        list.innerHTML = '<li>No new assignments.</li>';
+      }
+    }
+
+    async function fetchSummaryStats() {
+      const res = await fetch('get_summary_stats.php');
+      const data = await res.json();
+      document.getElementById('total-occurrences').textContent = data.total_occurrences_today ?? '--';
+      document.getElementById('pending-actions').textContent = data.pending_actions ?? '--';
+      document.getElementById('officer-name').textContent = data.officer_name ?? '[Name]';
+      document.getElementById('officer-rank').textContent = data.rank ?? '[Rank]';
+    }
+
+    async function fetchTodayOccurrences() {
+      const res = await fetch('get_recent_occurrences.php');
+      const data = await res.json();
+      const list = document.getElementById('today-occurrences');
+      list.innerHTML = '';
+      if (Array.isArray(data) && data.length > 0) {
+        data.forEach(o => {
+          const li = document.createElement('li');
+          li.innerHTML = `<strong>${o.ob_number}:</strong> ${o.nature}`;
+          list.appendChild(li);
+        });
+      } else {
+        list.innerHTML = '<li>No occurrences recorded today.</li>';
+      }
+    }
+
+    async function fetchLatestActivity() {
+      const res = await fetch('get_latest_activity.php');
+      const data = await res.json();
+      if (data && data.ob_number) {
+        updateRecentActivityCard(data);
+      }
+    }
+
+    function updateRecentActivityCard(activity) {
+      document.getElementById('latest-activity').textContent =
+        `OB${activity.ob_number}: ${activity.activity} (${new Date(activity.timestamp).toLocaleString()})`;
+    }
+  </script>
+
+</body>
+</html>

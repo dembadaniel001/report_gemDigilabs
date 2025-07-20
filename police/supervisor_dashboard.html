@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supervisor Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eaeaea;
+    }
+
+    header {
+      background: #003366;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border-left: 6px solid #003366;
+    }
+
+    .card:hover {
+      background: #003366;
+      color: white;
+      transform: translateY(-4px);
+      cursor: pointer;
+    }
+
+    .card a {
+      text-decoration: none;
+      color: inherit;
+      font-weight: bold;
+    }
+
+    .logout {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .logout a {
+      text-decoration: none;
+      color: white;
+      background: #b22222;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .logout a:hover {
+      background: #8b0000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Supervisor Dashboard - Digital OB System</h1>
+  </header>
+
+  <div class="container">
+    <h2>Welcome, Supervisor</h2>
+    <div class="dashboard-grid">
+      <div class="card"><a href="supervisor_view_occurrences.html">📄 View Occurrences</a></div>
+      <div class="card"><a href="supervisor_reports.html">✔️ Verify Reports</a></div>
+      <div class="card"><a href="supervisor_monitor_assignments.html">🧾 Monitor Assignments</a></div>
+      <div class="card"><a href="supervisor_audit_logs.html">📊 View Audit Logs</a></div>
+      <div class="card"><a href="supervisor_reports.html">📥 Export Reports</a></div>
+      <div class="card"><a href="supervisor_messaging.html">✉️ Message Officers</a></div>
+    </div>
+
+    <div class="logout">
+      <a href="logout.php">Logout</a>
+    </div>
+  </div>
+</body>
+</html>

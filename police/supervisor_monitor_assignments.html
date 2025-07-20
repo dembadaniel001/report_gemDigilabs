@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monitor Case Assignments</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #002147;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #003366;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      border-bottom: 4px solid #FFD700;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      color: #000;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #DA121A;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    select {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      color: #002147;
+    }
+
+    select:hover {
+      border-color: #DA121A;
+      background-color: #fff0f0;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .success {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+
+    .error {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">Monitor Case Assignments</div>
+
+  <div class="container">
+
+    <div id="statusMessage" class="message"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>OB Number</th>
+          <th>Nature</th>
+          <th>Badge Number</th>
+          <th>Officer Name</th>
+          <th>Remarks</th>
+          <th>Assigned On</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="assignmentTableBody">
+        <!-- Assignment rows go here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function showMessage(text, type) {
+      const box = document.getElementById('statusMessage');
+      box.textContent = text;
+      box.className = `message ${type}`;
+      box.style.display = 'block';
+      setTimeout(() => box.style.display = 'none', 3000);
+    }
+
+    function updateStatus(obNumber, newStatus) {
+      fetch('update_case_status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ob_number: obNumber, status: newStatus })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showMessage(data.message, 'success');
+        } else {
+          showMessage(data.message, 'error');
+        }
+      })
+      .catch(error => {
+        console.error("Status update failed:", error);
+        showMessage("Error updating case status.", 'error');
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch('fetch_assignments.php')
+        .then(response => response.json())
+        .then(data => {
+          const tbody = document.getElementById('assignmentTableBody');
+
+          if (data.success && data.assignments.length > 0) {
+            data.assignments.forEach(assignment => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${assignment.ob_number}</td>
+                <td>${assignment.nature}</td>
+                <td>${assignment.badge_number}</td>
+                <td>${assignment.officer_name}</td>
+                <td>${assignment.remarks || '—'}</td>
+                <td>${assignment.assigned_at}</td>
+                <td>
+                  <select onchange="updateStatus('${assignment.ob_number}', this.value)">
+                    <option value="">Change...</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                </td>
+              `;
+              tbody.appendChild(row);
+            });
+          } else {
+            tbody.innerHTML = '<tr><td colspan="7">No assignments found.</td></tr>';
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching assignments:", error);
+          alert("Failed to load assignments.");
+        });
+    });
+  </script>
+</body>
+</html>

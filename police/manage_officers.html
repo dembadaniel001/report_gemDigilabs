@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Officers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --police-blue: #003366;
+      --police-gold: #FFD700;
+      --police-red: #d7261e;
+      --light-bg: #f8f9fa;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background: var(--police-blue);
+      padding: 10px;
+      color: #fff;
+      position: relative;
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-toggle {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--police-blue);
+    }
+
+    .add-btn {
+      background: var(--police-gold);
+      color: var(--police-blue);
+      border: none;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      border-radius: 3px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .add-btn:hover {
+      background: #e6c200;
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: flex-end;
+    }
+
+    .search-bar input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .search-bar button {
+      padding: 8px 12px;
+      border: 1px solid var(--police-gold);
+      background: var(--police-gold);
+      color: var(--police-blue);
+      border-radius: 0 3px 3px 0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      background: #e6c200;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--police-blue);
+      color: #fff;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .action-btn {
+      padding: 5px 10px;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .edit-btn {
+      background: var(--police-blue);
+    }
+
+    .delete-btn {
+      background: var(--police-red);
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        display: none;
+        margin-top: 10px;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-container">
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="admin_dashboard.html">Dashboard</a>
+      <a href="manage_officers.html">Manage Officers</a>
+      <a href="occurrence_records_admin.html">Occurrence Records</a>
+      <a href="audit_logs.html">Audit Logs</a>
+      <a href="logout.php">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+  <h2>Manage Officers</h2>
+
+  <button class="add-btn" onclick="window.location.href='add_officer.html'">➕ Add New Officer</button>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search officers..." id="searchInput">
+    <button type="button" onclick="filterTable()">Search</button>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Badge Number</th>
+          <th>Full Name</th>
+          <th>National ID</th>
+          <th>Rank</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="officers-table-body">
+        <!-- Filled dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function toggleNav() {
+    document.getElementById("navLinks").classList.toggle("active");
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch('manage_officers.php')
+      .then(response => {
+        if (!response.ok) throw new Error("Session expired or access denied");
+        return response.json();
+      })
+      .then(data => {
+        const tbody = document.getElementById("officers-table-body");
+        tbody.innerHTML = "";
+        data.forEach(officer => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${officer.badge_number}</td>
+            <td>${officer.fullname}</td>
+            <td>${officer.national_id}</td>
+            <td>${officer.rank}</td>
+            <td>${officer.email}</td>
+            <td>${officer.phone}</td>
+            <td>
+              <button class="action-btn edit-btn" onclick="window.location.href='edit_officer.html?id=${officer.id}'">Edit</button>
+              <button class="action-btn delete-btn" onclick="deleteOfficer(${officer.id})">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        alert("Error: " + error.message);
+      });
+  });
+
+  function deleteOfficer(id) {
+    if (!confirm("Are you sure you want to delete this officer?")) return;
+    fetch('manage_officers.php', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Failed to delete officer.");
+      return response.json();
+    })
+    .then(data => {
+      alert(data.message || "Officer deleted.");
+      location.reload();
+    })
+    .catch(error => {
+      alert("Error: " + error.message);
+    });
+  }
+
+  function filterTable() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#officers-table-body tr");
+    rows.forEach(row => {
+      const rowText = row.innerText.toLowerCase();
+      row.style.display = rowText.includes(searchInput) ? "" : "none";
+    });
+  }
+</script>
+
+</body>
+</html>

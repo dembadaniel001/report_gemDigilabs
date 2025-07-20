@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Officer Registration</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: url('images/image1.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 450px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .submit-btn:hover {
+      background-color: #002244;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .links a {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0 8px;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Officer Registration</h2>
+    <form id="registerForm" method="POST" action="register.php">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" placeholder="Enter full name" required>
+
+      <label for="idNumber">National ID Number</label>
+      <input type="text" id="idNumber" name="idNumber" placeholder="Enter national ID number" required>
+
+      <label for="badgeNumber">Badge Number</label>
+      <input type="text" id="badgeNumber" name="badgeNumber" placeholder="Enter badge number" required>
+
+      <label for="rank">Rank</label>
+      <select id="rank" name="rank" required>
+        <option value="">-- Select Rank --</option>
+        <option value="Chief Inspector">Chief Inspector (OCS)</option>
+        <option value="Inspector of Police">Inspector of Police</option>
+        <option value="Senior Sergeant">Senior Sergeant (Deputy OCS)</option>
+        <option value="Sergeant">Sergeant</option>
+        <option value="Corporal">Corporal</option>
+        <option value="Police Constable">Police Constable (PC)</option>
+      </select>
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter email address" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="e.g., +254..." required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required>
+
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required>
+
+      <button type="submit" class="submit-btn">Register</button>
+    </form>
+
+    <div class="links">
+      <a href="login.html">Login</a> |
+      <a href="forgot_password.html">Forgot Password?</a>
+    </div>
+  </div>
+</body>
+</html>

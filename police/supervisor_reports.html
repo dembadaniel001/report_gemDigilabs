@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Export Occurrence Reports</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #002147;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #003366;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      border-bottom: 3px solid #FFD700;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .filter-group > div {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      background-color: #DA121A;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #b40f15;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #003366;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Supervisor Report & Export</div>
+
+  <div class="container">
+    <div class="filter-group">
+      <div>
+        <label for="fromDate">From Date</label>
+        <input type="date" id="fromDate">
+      </div>
+      <div>
+        <label for="toDate">To Date</label>
+        <input type="date" id="toDate">
+      </div>
+      <div>
+        <label for="nature">Nature of Occurrence</label>
+        <input type="text" id="nature" placeholder="e.g. Theft, Assault">
+      </div>
+    </div>
+
+    <button class="btn" id="viewReportBtn">View Report</button>
+    <button class="btn" onclick="exportToPDF()">Export PDF</button>
+    <button class="btn" onclick="exportToExcel()">Export Excel</button>
+
+    <table id="reportTable">
+      <thead>
+        <tr>
+          <th>OB Number</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Nature</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Fetched report rows go here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("viewReportBtn").addEventListener("click", function () {
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        const nature = document.getElementById("nature").value;
+
+        const url = `fetch_report_data.php?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&nature=${encodeURIComponent(nature)}`;
+
+        fetch(url)
+          .then(res => res.json())
+          .then(data => {
+            const tbody = document.querySelector("#reportTable tbody");
+            tbody.innerHTML = "";
+
+            if (!Array.isArray(data) || data.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="5">No records found for the selected filters.</td></tr>';
+              return;
+            }
+
+            data.forEach(row => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>${row.ob_number}</td>
+                <td>${row.occurrence_date}</td>
+                <td>${row.occurrence_time}</td>
+                <td>${row.nature_of_occurrence}</td>
+                <td>${row.remarks}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          })
+          .catch(err => {
+            alert("Failed to load reports");
+            console.error("Fetch error:", err);
+          });
+      });
+    });
+
+    function exportToPDF() {
+      window.open('export_report_pdf.php', '_blank');
+    }
+
+    function exportToExcel() {
+      window.open('export_report_excel.php', '_blank');
+    }
+  </script>
+</body>
+</html>

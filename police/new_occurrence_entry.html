@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Occurrence Book Entry</title>
+  <style>
+    :root {
+      --police-blue: #003366;
+      --police-red: #d7261e;
+      --police-gold: #ffd700;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-bar {
+      background: var(--police-blue);
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: var(--police-blue);
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        padding: 10px 15px; /* ✅ Fixed: horizontal padding */
+        box-sizing: border-box;
+        z-index: 10;
+      }
+
+      .nav-links a {
+        padding: 8px 0; /* ✅ Better touch spacing */
+        display: block;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--police-blue);
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    input[disabled] {
+      background: #e9ecef;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: var(--police-red);
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .submit-btn:hover {
+      background: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Responsive Navigation -->
+  <nav class="nav-bar">
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="officer_dashboard.html">Dashboard</a>
+      <a href="new_occurrence_entry.html">New Occurrence</a>
+      <a href="records.php">Records</a>
+      <a href="officer_profile.php">Profile</a>
+      <a href="logout.php">Logout</a>
+    </div>
+  </nav>
+
+  <!-- OB Entry Form -->
+  <div class="container">
+    <h2>Digital Occurrence Book Entry</h2>
+    <form id="digitalOBForm" method="POST" action="submit_occurrence.php">
+
+      <label for="obNumber">OB Number</label>
+      <input type="text" id="obNumber" name="obNumber" value="Auto-generated" disabled>
+
+      <label for="referenceNumber">Reference Number (if any)</label>
+      <input type="text" id="referenceNumber" name="referenceNumber" placeholder="Enter reference number">
+
+      <label for="occurrenceDate">Occurrence Date</label>
+      <input type="date" id="occurrenceDate" name="occurrenceDate" required>
+
+      <label for="occurrenceTime">Occurrence Time (HH:MM)</label>
+      <input type="time" id="occurrenceTime" name="occurrenceTime" required>
+
+      <label for="caseFileNumber">Case File Number (if any)</label>
+      <input type="text" id="caseFileNumber" name="caseFileNumber" placeholder="Enter case file number">
+
+      <label for="natureOfOccurrence">Nature of Occurrence</label>
+      <input type="text" id="natureOfOccurrence" name="natureOfOccurrence" placeholder="Describe the occurrence" required>
+
+      <label for="remarks">Remarks</label>
+      <textarea id="remarks" name="remarks" placeholder="Enter any additional remarks" required></textarea>
+
+      <button type="submit" class="submit-btn">Submit Occurrence</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reporter Dashboard</title>
+  <style>
+    :root {
+      --dull-red: #A52A2A;
+      --muted-green: #006600;
+      --black: #000;
+      --white: #FFF;
+      --light-gray: #f2f2f2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--black);
+    }
+
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { margin: 0; font-size: 1.8em; }
+
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+
+    header nav a:hover { text-decoration: underline; }
+
+    .tabs {
+      display: flex;
+      background: var(--white);
+      border-bottom: 1px solid #ccc;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 15px;
+      font-size: 1.1em;
+      border: none;
+      background: var(--white);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tabs button.active {
+      background: var(--light-gray);
+      border-bottom: 2px solid var(--muted-green);
+      font-weight: bold;
+    }
+
+    .content-section {
+      padding: 20px;
+      background: var(--white);
+      min-height: 300px;
+    }
+
+    .hidden { display: none; }
+
+    .dept-buttons {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .dept-buttons button {
+      padding: 10px 15px;
+      margin: 0 5px;
+      border: 1px solid var(--muted-green);
+      background: var(--white);
+      color: var(--muted-green);
+      cursor: pointer;
+    }
+
+    .dept-buttons button.active {
+      background: var(--muted-green);
+      color: var(--white);
+    }
+
+    .form-group { margin-bottom: 15px; }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+
+    #subjectOptions {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    #subjectOptions label {
+      margin: 0 10px;
+      cursor: pointer;
+    }
+
+    #customSubjectDiv {
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: var(--dull-red);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th { background: #ddd; }
+
+    td.action {
+      text-align: center;
+    }
+
+    td.action button {
+      padding: 6px 10px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+    }
+
+    td.action button:hover {
+      background: var(--dull-red);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background: var(--white);
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 4px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 1.2em;
+      cursor: pointer;
+      color: var(--muted-green);
+    }
+
+    @media (max-width: 600px) {
+      .tabs button { padding: 10px; font-size: 1em; }
+      .content-section { padding: 10px; }
+      header h1 { font-size: 1.5em; }
+      header nav a { font-size: 0.9em; margin-left: 10px; }
+    }
+    /* (All CSS styles remain unchanged) */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Reporter Dashboard</h1>
+    <nav>
+      <a href="../index.html">⬅ Back to Website</a>
+      <a href="public_dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="tabs">
+    <button id="tabSubmit" class="active" onclick="switchTab('submit')">Submit New Issue</button>
+    <button id="tabReports" onclick="switchTab('reports')">My Reports</button>
+  </div>
+
+  <div id="submitSection" class="content-section">
+    <h2>Submit New Issue</h2>
+
+    <div class="dept-buttons">
+      <button onclick="selectDept('Police', this)">Police</button>
+      <button onclick="selectDept('Chief', this)">Chief</button>
+      <button onclick="selectDept('MP', this)">MP</button>
+    </div>
+
+    <div class="form-group">
+      <label>Selected Department:</label>
+      <input type="text" id="selectedDept" readonly style="background: #eee;">
+    </div>
+
+    <div class="form-group">
+      <label>Full Name:</label>
+      <input type="text" id="fullName" placeholder="Enter your Full Name">
+    </div>
+
+    <div class="form-group">
+      <label>Contact Number:</label>
+      <input type="text" id="contactNumber" placeholder="Enter your contact number">
+    </div>
+
+    <div class="form-group">
+      <label>ID Number:</label>
+      <input type="text" id="idNumber" placeholder="Enter your National ID number">
+    </div>
+
+    <div class="form-group">
+      <label>Ward:</label>
+      <input type="text" id="ward" placeholder="Enter the Ward of the issue">
+    </div>
+
+    <div class="form-group">
+      <label>Sub Location:</label>
+      <input type="text" id="sub_Location" placeholder="Enter the Sub Location of the issue">
+    </div>
+
+    <div class="form-group">
+      <label>Village:</label>
+      <input type="text" id="village" placeholder="Enter the Village of the issue">
+    </div>
+
+    <div id="subjectOptions" class="hidden"></div>
+
+    <div id="customSubjectDiv" class="form-group">
+      <label>Custom Subject:</label>
+      <input type="text" id="customSubject" placeholder="Enter custom subject">
+    </div>
+
+    <div class="form-group">
+      <label>Issue Description:</label>
+      <textarea id="description" rows="5" placeholder="Describe your issue" required></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="submitIssue()">Submit Issue</button>
+  </div>
+
+  <div id="reportsSection" class="content-section hidden">
+    <h2>My Reports</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Subject</th>
+          <th>Status</th>
+          <th>Date Submitted</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="reportsTable"></tbody>
+    </table>
+  </div>
+
+  <div id="reportModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeReportModal()">&times;</span>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentDept = "";
+
+    function switchTab(tabName) {
+      document.getElementById('submitSection').classList.toggle('hidden', tabName !== 'submit');
+      document.getElementById('reportsSection').classList.toggle('hidden', tabName !== 'reports');
+      document.getElementById('tabSubmit').classList.toggle('active', tabName === 'submit');
+      document.getElementById('tabReports').classList.toggle('active', tabName === 'reports');
+    }
+
+    function selectDept(dept, button) {
+      currentDept = dept;
+      document.getElementById('selectedDept').value = dept;
+      document.querySelectorAll('.dept-buttons button').forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const options = subjectMapping[dept] || [];
+      const subjectDiv = document.getElementById('subjectOptions');
+      let html = "<label>Select Subject:</label><br>";
+      options.forEach((option, index) => {
+        const radioId = dept + "_option_" + index;
+        html += `<input type='radio' name='subject' id='${radioId}' value='${option}' onchange="handleSubjectSelection('${option}')" />`;
+        html += `<label for='${radioId}'>${option}</label> `;
+      });
+      subjectDiv.innerHTML = html;
+      subjectDiv.classList.remove("hidden");
+      document.getElementById('customSubjectDiv').style.display = "none";
+    }
+
+    const subjectMapping = {
+      "Police": ["Assault", "Theft", "Robbery", "Other"],
+      "Chief": ["Land Dispute", "Livestock Theft", "Abuse", "Other"],
+      "MP": ["Electricity", "Road Issues", "Other"]
+    };
+
+    function handleSubjectSelection(option) {
+      document.getElementById('customSubjectDiv').style.display = option === "Other" ? "block" : "none";
+    }
+
+    function submitIssue() {
+      const dept = document.getElementById('selectedDept').value;
+      if (!dept) return alert("Please select a department.");
+      const subjectRadio = document.querySelector('input[name="subject"]:checked');
+      if (!subjectRadio) return alert("Please select a subject.");
+      let subject = subjectRadio.value;
+      if (subject === "Other") {
+        subject = document.getElementById('customSubject').value.trim();
+        if (!subject) return alert("Please enter a custom subject.");
+      }
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const contactNumber = document.getElementById('contactNumber').value.trim();
+      const idNumber = document.getElementById('idNumber').value.trim();
+      const ward = document.getElementById('ward').value.trim();
+      const subLocation = document.getElementById('sub_Location').value.trim();
+      const village = document.getElementById('village').value.trim();
+      const description = document.getElementById('description').value.trim();
+
+      if (!fullName || !contactNumber || !description) {
+        return alert("Full name, contact number, and description are required.");
+      }
+
+      fetch('public_submit_issue.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          department: dept,
+          subject,
+          fullName,
+          contactNumber,
+          idNumber,
+          ward,
+          subLocation,
+          village,
+          description
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          alert(data.message);
+          document.getElementById('selectedDept').value = "";
+          document.getElementById('subjectOptions').innerHTML = "";
+          document.getElementById('subjectOptions').classList.add("hidden");
+          document.getElementById('customSubject').value = "";
+          document.getElementById('fullName').value = "";
+          document.getElementById('contactNumber').value = "";
+          document.getElementById('idNumber').value = "";
+          document.getElementById('ward').value = "";
+          document.getElementById('sub_Location').value = "";
+          document.getElementById('village').value = "";
+          document.getElementById('description').value = "";
+          currentDept = "";
+          document.querySelectorAll('.dept-buttons button').forEach(btn => btn.classList.remove('active'));
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Submission failed.");
+      });
+    }
+
+    function closeReportModal() {
+      document.getElementById('reportModal').style.display = "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => fetchReports());
+
+    function fetchReports() {
+      fetch("public_get_reports.php")
+        .then(response => response.json())
+        .then(data => {
+          const tbody = document.getElementById("reportsTable");
+          tbody.innerHTML = "";
+          data.forEach(report => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${report.id}</td>
+              <td>${report.department}</td>
+              <td>${report.subject}</td>
+              <td>${report.status}</td>
+              <td>${report.date_submitted}</td>
+              <td class="action"><button onclick="viewReportDetails(${report.id})">View</button></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
+    function viewReportDetails(reportId) {
+      fetch(`public_report_details.php?id=${reportId}`)
+        .then(response => response.json())
+        .then(report => {
+          let html = `<h2>Report Details</h2>`;
+          html += `<p><strong>Report ID:</strong> ${report.id}</p>`;
+          html += `<p><strong>Department:</strong> ${report.department}</p>`;
+          html += `<p><strong>Subject:</strong> ${report.subject}</p>`;
+          html += `<p><strong>Contact Number:</strong> ${report.contact_number}</p>`;
+          html += `<p><strong>Date Submitted:</strong> ${report.date_submitted}</p>`;
+          html += `<p><strong>Status:</strong> ${report.status}</p>`;
+          html += `<p><strong>Description:</strong> ${report.description}</p>`;
+          document.getElementById('modalContent').innerHTML = html;
+          document.getElementById('reportModal').style.display = "block";
+        })
+        .catch(error => console.error("Error fetching details:", error));
+    }
+  </script>
+</body>
+</html>

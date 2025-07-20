@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Occurrence Records - Admin</title>
+  <style>
+    :root {
+      --police-blue: #003366;
+      --police-gold: #FFD700;
+      --police-red: #d7261e;
+      --light-bg: #f8f9fa;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background: var(--police-blue);
+      padding: 10px;
+      color: #fff;
+      position: relative;
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-toggle {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--police-blue);
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: flex-end;
+    }
+
+    .search-bar input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .search-bar button {
+      padding: 8px 12px;
+      border: 1px solid var(--police-gold);
+      background: var(--police-gold);
+      color: var(--police-blue);
+      border-radius: 0 3px 3px 0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      background: #e6c200;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--police-blue);
+      color: #fff;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+      white-space: nowrap;
+    }
+
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .action-btn {
+      padding: 5px 8px;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-right: 3px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .view-btn { background: var(--police-blue); }
+    .assign-btn { background: var(--police-gold); color: var(--police-blue); }
+
+    .action-btn:hover { opacity: 0.9; }
+
+    @media (max-width: 768px) {
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        display: none;
+        margin-top: 10px;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <button class="nav-toggle" onclick="toggleNav()">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="admin_dashboard.html">Dashboard</a>
+        <a href="manage_officers.html">Manage Officers</a>
+        <a href="occurrence_records_admin.html">Occurrence Records</a>
+        <a href="audit_logs.html">Audit Logs</a>
+        <a href="logout.php">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Occurrence Records (Admin)</h2>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by OB Number, Officer, or Nature...">
+      <button type="button">Search</button>
+    </div>
+
+    <!-- Occurrence Records Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>OB Number</th>
+            <th>Officer Name</th>
+            <th>Badge Number</th>
+            <th>Occurrence Date</th>
+            <th>Occurrence Time</th>
+            <th>Nature</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="8" style="text-align:center;">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function toggleNav() {
+      document.getElementById("navLinks").classList.toggle("active");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("fetch_occurrences.php")
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to load data");
+          return response.json();
+        })
+        .then(data => {
+          const tbody = document.querySelector("table tbody");
+          tbody.innerHTML = "";
+
+          if (data.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>No occurrence records found.</td></tr>";
+            return;
+          }
+
+          data.forEach(record => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${record.ob_number}</td>
+              <td>${record.officer_name}</td>
+              <td>${record.badge_number}</td>
+              <td>${record.occurrence_date}</td>
+              <td>${record.occurrence_time}</td>
+              <td>${record.nature}</td>
+              <td>${record.status}</td>
+              <td>
+                <button class="action-btn view-btn" onclick="location.href='occurrence_detail_admin.html?ob=${encodeURIComponent(record.ob_number)}'">View</button>
+                <button class="action-btn assign-btn" onclick="location.href='assign_case.html?ob=${encodeURIComponent(record.ob_number)}'">Assign</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(err => {
+          console.error("Error loading records:", err);
+          document.querySelector("table tbody").innerHTML = "<tr><td colspan='8'>Failed to load records.</td></tr>";
+        });
+    });
+  </script>
+</body>
+</html>
