@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Public Users</title>
+  <style>
+    /* CSS Variables for color palette */
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --white: #fff;
+      --gray: #f9f9f9;
+      --dark: #333;
+    }
+
+    /* Base body styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--gray);
+      color: var(--dark);
+    }
+
+    /* Header styles */
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+
+    /* Navigation links in header */
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+
+    header nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main container for content */
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+      background: var(--white);
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    /* Section heading */
+    h2 {
+      padding: 20px;
+      margin: 0;
+      color: var(--green);
+    }
+
+    /* Search bar styles */
+    .search-bar {
+      padding: 0 20px 10px;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 30px;
+    }
+
+    table th, table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    table th {
+      background: #f0f0f0;
+    }
+
+    /* Action buttons in table */
+    .action-btns button {
+      padding: 6px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9em;
+    }
+
+    .view-btn { background: #007bff; }
+    .deactivate-btn { background: #ff9900; }
+    .delete-btn { background: var(--red); }
+
+    .action-btns button:hover {
+      opacity: 0.85;
+    }
+
+    /* Responsive styles for smaller screens */
+    @media (max-width: 768px) {
+      table th, table td {
+        font-size: 0.9em;
+      }
+
+      .action-btns {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .action-btns button {
+        margin-bottom: 5px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header section with title and navigation -->
+<header>
+  <h1>Manage Public Users</h1>
+  <nav>
+    <a href="general_admin_dashboard.html">Dashboard</a>
+    <a href="admin_logout.php">Logout</a>
+  </nav>
+</header>
+
+<!-- Main content container -->
+<div class="container">
+  <h2>Registered Public Users</h2>
+  
+  <!-- Search bar for filtering users -->
+  <div class="search-bar">
+    <input type="text" placeholder="Search by name, email, or ID..." />
+  </div>
+
+  <!-- Users table -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>National ID</th>
+        <th>Registered On</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="public-users-table">
+      <!-- This section should be populated dynamically from PHP/MySQL -->
+      <tr>
+        <td>1</td>
+        <td>Jane Wanjiku</td>
+        <td>jane@example.com</td>
+        <td>+254712345678</td>
+        <td>35678901</td>
+        <td>2025-06-25</td>
+        <td class="action-btns">
+          <!-- Action buttons for each user -->
+          <button class="view-btn" onclick="location.href='view_public_user.html?id=1'">View</button>
+          <button class="deactivate-btn">Deactivate</button>
+          <button class="delete-btn">Delete</button>
+        </td>
+      </tr>
+      <!-- More rows dynamically generated -->
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

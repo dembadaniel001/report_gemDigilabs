@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>System Backup</title>
+  <style>
+    /* CSS Variables for theme colors */
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --gray: #f2f2f2;
+      --white: #fff;
+      --black: #000;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--gray);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header styling */
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+
+    /* Main container styling */
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: var(--white);
+      padding: 25px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: var(--green);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Backup action button styling */
+    .backup-actions {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .backup-actions button {
+      padding: 12px 20px;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .backup-actions button:hover {
+      background: var(--red);
+    }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background: var(--gray);
+    }
+
+    /* Action links styling */
+    .action-links a {
+      margin-right: 10px;
+      color: var(--green);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .action-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive design for small screens */
+    @media (max-width: 600px) {
+      .container { padding: 15px; margin: 20px; }
+      header h1 { font-size: 1.4em; }
+      header nav a { font-size: 0.9em; margin-left: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header section with navigation -->
+<header>
+  <h1>System Backup</h1>
+  <nav>
+    <!-- Link to dashboard page -->
+    <a href="general_admin_dashboard.html">Dashboard</a>
+    <!-- Link to logout script -->
+    <a href="admin_logout.php">Logout</a>
+  </nav>
+</header>
+
+<!-- Main content container -->
+<div class="container">
+  <h2>Manage Backups</h2>
+
+  <!-- Backup Now button form -->
+  <div class="backup-actions">
+    <!-- Form to trigger backup creation -->
+    <form action="create_backup.php" method="POST">
+      <button type="submit">Backup Now</button>
+    </form>
+  </div>
+
+  <h3>Recent Backups</h3>
+  <!-- Table displaying recent backup files -->
+  <table>
+    <thead>
+      <tr>
+        <th>Backup File</th>
+        <th>Date Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Example backup row (should be dynamically loaded from server) -->
+      <tr>
+        <td>backup_2025_06_26.sql</td>
+        <td>2025-06-26 10:15 AM</td>
+        <td class="action-links">
+          <!-- Download link for backup file -->
+          <a href="backups/backup_2025_06_26.sql" download>Download</a>
+          <!-- Delete link for backup file -->
+          <a href="delete_backup.php?file=backup_2025_06_26.sql">Delete</a>
+        </td>
+      </tr>
+      <tr>
+        <td>backup_2025_06_25.sql</td>
+        <td>2025-06-25 11:00 AM</td>
+        <td class="action-links">
+          <a href="backups/backup_2025_06_25.sql" download>Download</a>
+          <a href="delete_backup.php?file=backup_2025_06_25.sql">Delete</a>
+        </td>
+      </tr>
+      <!-- More rows dynamically populated -->
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add New User</title>
+  <style>
+    /* =========================
+       Color variables
+    ========================= */
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --gray: #f2f2f2;
+      --white: #fff;
+      --black: #000;
+    }
+
+    /* =========================
+       Base styles
+    ========================= */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--gray);
+      color: var(--black);
+    }
+
+    /* =========================
+       Header styles
+    ========================= */
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       Main container styles
+    ========================= */
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: var(--white);
+      padding: 25px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: var(--green);
+      text-align: center;
+    }
+
+    /* =========================
+       Form group styles
+    ========================= */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+
+    /* =========================
+       Submit button styles
+    ========================= */
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: var(--red);
+    }
+
+    /* =========================
+       Responsive styles
+    ========================= */
+    @media (max-width: 600px) {
+      .container { margin: 20px; padding: 15px; }
+      header h1 { font-size: 1.4em; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================
+     Page header with navigation
+========================= -->
+<header>
+  <h1>Add New User</h1>
+  <nav>
+    <!-- Link to dashboard -->
+    <a href="general_admin_dashboard.html">Dashboard</a>
+    <!-- Link to logout -->
+    <a href="admin_logout.php">Logout</a>
+  </nav>
+</header>
+
+<!-- =========================
+     Main form container
+========================= -->
+<div class="container">
+  <h2>Create New System User</h2>
+  <!-- User creation form -->
+  <form action="add_new_user.php" method="POST">
+    <!-- Full Name input -->
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" name="fullName" placeholder="Enter full name" required>
+    </div>
+
+    <!-- Email input -->
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter email address" required>
+    </div>
+
+    <!-- National ID input -->
+    <div class="form-group">
+      <label for="nationalId">National ID</label>
+      <input type="text" id="nationalId" name="nationalId" placeholder="Enter National ID" required>
+    </div>
+
+    <!-- Phone number input -->
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="+2547XXXXXXX" required>
+    </div>
+
+    <!-- User role selection -->
+    <div class="form-group">
+      <label for="userType">User Role</label>
+      <select id="userType" name="userType" required>
+        <option value="">-- Select Role --</option>
+        <option value="Public">Public User</option>
+        <option value="Chief">Chief</option>
+        <option value="MP">Member of Parliament</option>
+        <option value="Officer">Police Officer</option>
+        <option value="Admin">System Admin</option>
+      </select>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-group">
+      <label for="password">Initial Password</label>
+      <input type="password" id="password" name="password" placeholder="Set a password" required>
+    </div>
+
+    <!-- Confirm password input -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="submit-btn">Add User</button>
+  </form>
+</div>
+
+</body>
+</html>

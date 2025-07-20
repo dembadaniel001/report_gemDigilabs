@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MP Audit Logs</title>
+  <style>
+    :root {
+      --muted-green: #006600;
+      --dull-red:   #A52A2A;
+      --white:      #FFF;
+      --dark-gray:  #333;
+      --light-gray: #f2f2f2;
+      --border:     #ccc;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size:1.8em; margin:0; }
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size:0.95em;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: var(--white);
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .page-title {
+      text-align: center;
+      color: var(--muted-green);
+      font-size: 1.6em;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      font-size: 0.95em;
+    }
+    table th {
+      background: var(--muted-green);
+      color: var(--white);
+    }
+    @media (max-width: 600px) {
+      .container { margin:15px; padding:15px; }
+      header h1 { font-size:1.5em; }
+      header nav a { font-size:0.9em; margin-left:10px; }
+      table th, table td { font-size:0.85em; padding:8px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MP Dashboard</h1>
+    <nav>
+      <a href="mp_dashboard.html">Home</a>
+      <a href="mp_cases.html">My Issues</a>
+      <a href="mp_case_entry.html">New Issue</a>
+      <a href="mp_user_management.html">User Management</a>
+      <a href="mp_audit_logs.html">Audit Logs</a>
+      <a href="mp_profile.html">Profile</a>
+      <a href="mp_logout.php">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-title">Audit Logs</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Log ID</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Date & Time</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="logBody">
+        <tr>
+          <td>001</td>
+          <td>Hon. John Doe</td>
+          <td>Submitted Issue</td>
+          <td>2025-06-25 10:05</td>
+          <td>Issue 201 “Road Maintenance” created.</td>
+        </tr>
+        <tr>
+          <td>002</td>
+          <td>Hon. John Doe</td>
+          <td>Updated Profile</td>
+          <td>2025-06-20 14:30</td>
+          <td>Phone number changed to +254712345678.</td>
+        </tr>
+        <tr>
+          <td>003</td>
+          <td>Hon. John Doe</td>
+          <td>Updated Issue</td>
+          <td>2025-06-26 09:45</td>
+          <td>Status of Issue 201 changed from New to Pending.</td>
+        </tr>
+        <!-- more entries… -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+  fetch('fetch_audit_logs.php')
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        const tbody = document.getElementById('logBody');
+        tbody.innerHTML = '';
+        data.logs.forEach(log => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${log.id}</td>
+            <td>${log.user}</td>
+            <td>${log.action}</td>
+            <td>${log.log_time}</td>
+            <td>${log.description}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        alert('⚠️ Failed to load logs: ' + data.message);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('❌ Error loading audit logs.');
+    });
+</script>
+
+</body>
+</html>

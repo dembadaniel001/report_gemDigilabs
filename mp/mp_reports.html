@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MP Reports - North Gem Ward</title>
+  <style>
+    :root {
+      --dark-blue: #004080;
+      --orange: #ff6600;
+      --light-gray: #f9f9f9;
+      --white: #fff;
+      --border: #ccc;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--light-gray);
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--dark-blue);
+    }
+
+    .print-btn {
+      background: var(--dark-blue);
+      color: var(--white);
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin: 20px 0;
+      float: right;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--white);
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: var(--orange);
+      color: white;
+    }
+
+    td {
+      background-color: #fff;
+    }
+
+    @media print {
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>MP Supervisory - Public Reports</h1>
+  <button class="print-btn" onclick="window.print()">🖨️ Print Report</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date Reported</th>
+        <th>Issue Description</th>
+        <th>Ward</th>
+        <th>Sub Location</th>
+        <th>Village / Site</th>
+        <th>Proposed Solution</th>
+        <th>Reported By</th>
+        <th>Contact</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>20/5/2023</td>
+        <td>Street light between Junction to B.A Ohanga Secondary not working. Suspect a tree branch caused damage during the recent rains</td>
+        <td>North Gem</td>
+        <td>Got Regea/road to B.A</td>
+        <td>Got Regea/road to B.A</td>
+        <td>Assess and Repair street lights</td>
+        <td>Reported by Ted</td>
+        <td>—</td>
+        <td>Not Started</td>
+      </tr>
+      <tr>
+        <td>20/5/2023</td>
+        <td>KPLC transformer located at Mwadi school fails frequently. Weekly repairs call for in-depth investigation and solution</td>
+        <td>North Gem</td>
+        <td>Mwadi school</td>
+        <td>Mwadi school</td>
+        <td>Assess and Repair/Replace Transformer</td>
+        <td>Reported by Ted</td>
+        <td>—</td>
+        <td>Not Started</td>
+      </tr>
+      <tr>
+        <td>29/5/2023</td>
+        <td>Street lights off</td>
+        <td>Central Gem</td>
+        <td>Nyawara</td>
+        <td>Nyawara</td>
+        <td>Assess and Repair street lights</td>
+        <td>Reported by Bernard</td>
+        <td>—</td>
+        <td>Not Started</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>

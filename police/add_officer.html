@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add New Officer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="tel"],
+    form input[type="password"],
+    form select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #28a745;
+      border: none;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .submit-btn:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New Officer</h2>
+    <form id="addOfficerForm" method="POST" action="add_officer.php">
+      
+      <!-- Full Name -->
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" placeholder="Enter full name" required>
+      
+      <!-- Badge Number -->
+      <label for="badgeNumber">Badge Number</label>
+      <input type="text" id="badgeNumber" name="badge_number" placeholder="Enter badge number" required>
+      
+      <!-- National ID Number -->
+      <label for="idNumber">National ID Number</label>
+      <input type="text" id="idNumber" name="national_id" placeholder="Enter national ID number" required>
+      
+      <!-- Rank -->
+      <label for="rank">Rank</label>
+      <select id="rank" name="rank" required>
+        <option value="">Select Rank</option>
+        <option value="Constable">Constable</option>
+        <option value="Sergeant">Sergeant</option>
+        <option value="Inspector">Inspector</option>
+        <option value="Chief Inspector">Chief Inspector</option>
+      </select>
+      
+      <!-- Email Address -->
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter email address" required>
+      
+      <!-- Phone Number -->
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="e.g., +254700000000" required>
+      
+      <!-- Set Password -->
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required>
+      
+      <!-- Confirm Password -->
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required>
+      
+      <button type="submit" class="submit-btn">Add Officer</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("addOfficerForm").addEventListener("submit", function (e) {
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm_password").value;
+
+      if (password !== confirm) {
+        alert("Passwords do not match!");
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

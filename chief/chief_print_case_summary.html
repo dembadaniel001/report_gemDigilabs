@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Case Summary - Print Friendly</title>
+  <style>
+    :root {
+      --dull-red: #A52A2A;
+      --muted-green: #006600;
+      --black: #000;
+      --white: #FFF;
+    }
+    body {
+      margin: 20px;
+      font-family: Arial, sans-serif;
+      color: var(--black);
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: var(--muted-green);
+    }
+    .summary {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .summary p {
+      margin: 5px 0;
+    }
+    .detail-label {
+      font-weight: bold;
+    }
+    .print-button {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .print-button button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    @media print {
+      .print-button { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="print-button">
+      <button onclick="window.print()">Print Case Summary</button>
+    </div>
+    <h1>Case Summary</h1>
+    <div class="summary" id="case-summary">
+      <p>Loading case data...</p>
+    </div>
+  </div>
+
+  <script>
+    const caseId = new URLSearchParams(window.location.search).get("case_id");
+
+    if (caseId) {
+      fetch(`chief_print_case_summary.php?case_id=${caseId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById("case-summary").innerHTML = `<p>${data.error}</p>`;
+          } else {
+            let updatesHTML = '';
+            if (Array.isArray(data.updates) && data.updates.length > 0) {
+              updatesHTML = `<p><span class="detail-label">Updates:</span></p><ul>`;
+              data.updates.forEach(update => {
+                updatesHTML += `<li>${update.timestamp}: ${update.note}</li>`;
+              });
+              updatesHTML += '</ul>';
+            } else {
+              updatesHTML = `<p><span class="detail-label">Updates:</span> None recorded yet.</p>`;
+            }
+
+            document.getElementById("case-summary").innerHTML = `
+              <p><span class="detail-label">Case ID:</span> ${data.id}</p>
+              <p><span class="detail-label">Subject:</span> ${data.subject}</p>
+              <p><span class="detail-label">Reporter:</span> ${data.full_name}</p>
+              <p><span class="detail-label">Contact:</span> ${data.contact}</p>
+              <p><span class="detail-label">Date Submitted:</span> ${data.date_submitted}</p>
+              <p><span class="detail-label">Status:</span> ${data.status}</p>
+              <p><span class="detail-label">Description:</span><br>${data.description.replace(/\n/g, "<br>")}</p>
+              ${updatesHTML}
+            `;
+          }
+        })
+        .catch(error => {
+          document.getElementById("case-summary").innerHTML = `<p>❌ Error loading case: ${error}</p>`;
+        });
+    } else {
+      document.getElementById("case-summary").innerHTML = "<p>❌ No Case ID provided in the URL.</p>";
+    }
+  </script>
+</body>
+</html>

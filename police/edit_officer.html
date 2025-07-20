@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Officer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e6e6e6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-top: 6px solid #001f3f; /* Kenya Police Navy Blue */
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #b22222; /* Kenya Police Red */
+    }
+
+    form label {
+      display: block;
+      margin: 12px 0 5px;
+      font-weight: bold;
+      color: #001f3f;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="tel"],
+    form select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    form input[readonly] {
+      background: #e9ecef;
+      cursor: not-allowed;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #001f3f; /* Navy Blue */
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #ffffff;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #b22222; /* Red on hover */
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.4em;
+      }
+
+      .submit-btn {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Edit Officer</h2>
+    <form id="editOfficerForm" method="POST" action="edit_officer.php">
+      <input type="hidden" name="action" value="update">
+      <input type="hidden" id="id" name="id" />
+
+      <!-- Full Name -->
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" required>
+
+      <!-- Badge Number -->
+      <label for="badgeNumber">Badge Number</label>
+      <input type="text" id="badgeNumber" name="badge_number" required>
+
+      <!-- National ID Number -->
+      <label for="idNumber">National ID Number</label>
+      <input type="text" id="idNumber" name="national_id" required>
+
+      <!-- Rank -->
+      <label for="rank">Rank</label>
+      <select id="rank" name="rank" required>
+        <option value="">Select Rank</option>
+        <option value="Constable">Constable</option>
+        <option value="Sergeant">Sergeant</option>
+        <option value="Inspector">Inspector</option>
+        <option value="Chief Inspector">Chief Inspector</option>
+      </select>
+
+      <!-- Role -->
+      <label for="role">Role</label>
+      <select id="role" name="role" required>
+        <option value="">Select Role</option>
+        <option value="Officer">Officer</option>
+        <option value="Supervisor">Supervisor</option>
+        <option value="Admin">Admin</option>
+      </select>
+
+      <!-- Email -->
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required>
+
+      <!-- Phone -->
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" required>
+
+      <button type="submit" class="submit-btn">Update Officer</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const officerId = params.get("id");
+
+      if (!officerId) {
+        alert("No officer ID provided.");
+        return;
+      }
+
+      fetch(`get_officer.php?id=${officerId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+
+          document.getElementById("id").value = data.id;
+          document.getElementById("fullname").value = data.fullname;
+          document.getElementById("badgeNumber").value = data.badge_number;
+          document.getElementById("idNumber").value = data.national_id;
+          document.getElementById("rank").value = data.rank;
+          document.getElementById("role").value = data.role;
+          document.getElementById("email").value = data.email;
+          document.getElementById("phone").value = data.phone;
+        })
+        .catch(err => {
+          console.error("Fetch error:", err);
+          alert("Failed to fetch officer data.");
+        });
+    });
+  </script>
+</body>
+</html>

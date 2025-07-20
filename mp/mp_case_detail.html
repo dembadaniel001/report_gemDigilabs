@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MP Issue Details</title>
+  <style>
+    :root {
+      --muted-green: #006600;
+      --dull-red:   #A52A2A;
+      --white:      #FFF;
+      --dark-gray:  #333;
+      --light-gray: #f2f2f2;
+      --border:     #ccc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--dark-gray);
+      line-height: 1.6;
+    }
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 1.8em; margin: 0; }
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 0.95em;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: var(--white);
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .page-title {
+      text-align: center;
+      color: var(--muted-green);
+      font-size: 1.6em;
+      margin-bottom: 20px;
+    }
+    .details p {
+      margin: 8px 0;
+    }
+    .details .label {
+      font-weight: bold;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 25px;
+    }
+    .actions button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .actions button:hover {
+      background: var(--dull-red);
+    }
+    @media (max-width: 600px) {
+      .actions button {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+      }
+      header nav a {
+        font-size: 0.9em;
+        margin-left: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MP Dashboard</h1>
+    <nav>
+      <a href="mp_dashboard.html">Home</a>
+      <a href="mp_cases.html">My Issues</a>
+      <a href="mp_case_entry.html">New Issue</a>
+      <a href="mp_audit_logs.html">Audit Logs</a>
+      <a href="mp_profile.html">Profile</a>
+      <a href="mp_logout.php">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="page-title">Issue Details</div>
+    <div class="details">
+      <p>Loading issue details...</p>
+    </div>
+    <div class="actions">
+      <button id="updateBtn">Update Issue</button>
+      <button id="printBtn">Print Summary</button>
+    </div>
+  </div>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const issueId = urlParams.get("id");
+
+  if (!issueId) {
+    alert("No issue ID provided.");
+    document.querySelector(".details").innerHTML = "<p style='color:red;'>No issue ID provided in the URL.</p>";
+    document.querySelector(".actions").style.display = "none";
+    return;
+  }
+
+  // Update the Update and Print buttons to carry the issueId
+  document.getElementById("updateBtn").onclick = function() {
+    location.href = `mp_case_update.html?id=${encodeURIComponent(issueId)}`;
+  };
+  document.getElementById("printBtn").onclick = function() {
+    location.href = `mp_print_issue_summary.html?id=${encodeURIComponent(issueId)}`;
+  };
+
+  fetch(`fetch_mp_case_detail.php?id=${encodeURIComponent(issueId)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status !== "success" || !data.issue) {
+        document.querySelector(".details").innerHTML = "<p style='color:red;'>Failed to load issue details.</p>";
+        return;
+      }
+
+      const issue = data.issue;
+      const container = document.querySelector(".details");
+      container.innerHTML = `
+        <p><span class="label">Issue ID:</span> ${issue.id}</p>
+        <p><span class="label">Subject:</span> ${issue.subject}</p>
+        <p><span class="label">Date Submitted:</span> ${issue.date_submitted}</p>
+        <p><span class="label">Status:</span> ${issue.status}</p>
+        <p><span class="label">Reporter:</span> ${issue.full_name}</p>
+        <p><span class="label">Contact Info:</span> ${issue.contact_number} / ${issue.email || "N/A"}</p>
+        <p><span class="label">Description:</span> ${issue.description}</p>
+      `;
+    })
+    .catch(err => {
+      console.error(err);
+      document.querySelector(".details").innerHTML = "<p style='color:red;'>Error fetching issue details.</p>";
+    });
+});
+</script>
+</body>
+</html>

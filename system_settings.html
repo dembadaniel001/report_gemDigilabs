@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>System Settings</title>
+  <style>
+    /* CSS Variables for color palette */
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --white: #fff;
+      --gray: #f2f2f2;
+      --dark: #333;
+    }
+
+    /* Base body styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: var(--gray);
+      color: var(--dark);
+    }
+
+    /* Header styling */
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+
+    /* Navigation links styling */
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 0.95em;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main container styling */
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: var(--white);
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: var(--green);
+    }
+
+    /* Form group styling */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-group small {
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    /* Save button styling */
+    .btn-save {
+      background: var(--green);
+      color: var(--white);
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-save:hover {
+      background: var(--red);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with navigation -->
+  <header>
+    <h1>System Settings</h1>
+    <nav>
+      <a href="general_admin_dashboard.html">Dashboard</a>
+      <a href="system_reports.html">Reports</a>
+      <a href="logout.html">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Main content container -->
+  <div class="container">
+    <h2>Manage System Configuration</h2>
+    <!-- Settings form -->
+    <form action="update_settings.php" method="POST">
+      <!-- System Name input -->
+      <div class="form-group">
+        <label for="siteName">System Name</label>
+        <input type="text" id="siteName" name="siteName" placeholder="e.g. North Gem Incident Tracker" required>
+      </div>
+
+      <!-- System Email input -->
+      <div class="form-group">
+        <label for="email">System Email</label>
+        <input type="email" id="email" name="email" placeholder="e.g. admin@northgem.go.ke" required>
+      </div>
+
+      <!-- Default User Role select -->
+      <div class="form-group">
+        <label for="defaultRole">Default User Role</label>
+        <select id="defaultRole" name="defaultRole" required>
+          <option value="Public">Public</option>
+          <option value="Officer">Officer</option>
+          <option value="Chief">Chief</option>
+          <option value="MP">MP</option>
+        </select>
+      </div>
+
+      <!-- Security Level select -->
+      <div class="form-group">
+        <label for="securityLevel">Security Level</label>
+        <select id="securityLevel" name="securityLevel">
+          <option value="Standard">Standard</option>
+          <option value="Strict">Strict</option>
+          <option value="Custom">Custom</option>
+        </select>
+        <small>Choose how strictly user activities are monitored.</small>
+      </div>
+
+      <!-- Session Timeout input -->
+      <div class="form-group">
+        <label for="timeout">Session Timeout (minutes)</label>
+        <input type="number" id="timeout" name="timeout" value="30" min="5" max="120">
+      </div>
+
+      <!-- Save button -->
+      <button type="submit" class="btn-save">Save Settings</button>
+    </form>
+  </div>
+</body>
+</html>

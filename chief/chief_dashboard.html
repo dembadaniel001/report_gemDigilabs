@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chief Dashboard</title>
+  <style>
+    :root {
+      --muted-green: #006600;
+      --dull-red: #A52A2A;
+      --white: #FFF;
+      --light-gray: #f2f2f2;
+      --dark-gray: #444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--dark-gray);
+    }
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { margin: 0; font-size: 1.8em; }
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 0.95em;
+    }
+    header nav a:hover { text-decoration: underline; }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+    aside {
+      width: 220px;
+      background: var(--white);
+      padding: 20px;
+      border-right: 1px solid #ddd;
+    }
+    aside h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: var(--muted-green);
+    }
+    .actions-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .actions-list li + li { margin-top: 12px; }
+    .actions-list a {
+      display: block;
+      padding: 10px;
+      background: var(--muted-green);
+      color: var(--white);
+      text-decoration: none;
+      text-align: center;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .actions-list a:hover { background: var(--dull-red); }
+
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      flex: 1;
+      min-width: 150px;
+      background: var(--white);
+      padding: 20px;
+      border-radius: 6px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .stat h3 {
+      margin: 0;
+      font-size: 2.2em;
+      color: var(--muted-green);
+    }
+    .stat p { margin: 8px 0 0; font-size: 1em; }
+
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .case-card {
+      background: var(--white);
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .case-card h4 {
+      margin: 0 0 10px;
+      color: var(--muted-green);
+      font-size: 1.1em;
+    }
+    .case-card .meta {
+      font-size: 0.9em;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .case-card .meta span { display: block; }
+    .case-card button {
+      margin-top: auto;
+      padding: 8px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .case-card button:hover { background: var(--dull-red); }
+
+    @media (max-width: 800px) {
+      aside { display: none; }
+      .layout { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header section -->
+  <header>
+    <h1>Chief Dashboard</h1>
+    <nav>
+      <a href="chief_dashboard.html">Home</a>
+      <a href="chief_cases.html">All Cases</a>
+     
+      <a href="chief_user_management.html">User Management</a>
+      <a href="chief_audit_logs.html">Audit Logs</a> <!-- Link to audit logs -->
+      <a href="chief_profile.html">Profile</a>
+      <a href="chief_logout.php">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Main layout container -->
+  <div class="layout">
+    <!-- Sidebar for quick actions -->
+    <aside>
+      <h2>Quick Actions</h2>
+      <ul class="actions-list">
+        <li><a href="chief_case_entry.html">+ Add New Case</a></li>
+        <li><a href="chief_cases.html">📋 View Cases</a></li>
+        <li><a href="chief_audit_logs.html">🕓 Audit Logs</a></li> <!-- Link to audit logs -->
+        <!-- Additional quick actions can be added here -->
+      </ul>
+    </aside>
+
+    <main>
+      <div class="stats">
+        <div class="stat"><h3>5</h3><p>New Cases</p></div>
+        <div class="stat"><h3>3</h3><p>Pending Cases</p></div>
+        <div class="stat"><h3>10</h3><p>Resolved Cases</p></div>
+      </div>
+
+      <!-- Section for recent cases -->
+      <h2>Recent Cases</h2>
+      <div class="cases-grid"> <!-- Grid for displaying case cards -->
+        <div class="case-card">
+          <h4>Case 101: Land Dispute</h4>
+          <div class="meta">
+            <span><strong>Reporter:</strong> Jane Smith</span>
+            <span><strong>Status:</strong> New</span>
+            <span><strong>Date:</strong> 2025-07-01</span>
+          </div>
+          <button onclick="location.href='chief_case_detail.html'">View Details</button>
+        </div>
+
+        <div class="case-card">
+          <h4>Case 102: Livestock Theft</h4>
+          <div class="meta">
+            <span><strong>Reporter:</strong> Samuel Mwangi</span>
+            <span><strong>Status:</strong> Pending</span>
+            <span><strong>Date:</strong> 2025-06-30</span>
+          </div>
+          <button onclick="location.href='chief_case_detail.html'">View Details</button>
+        </div>
+
+        <div class="case-card">
+          <h4>Case 103: Unauthorized Land Use</h4>
+          <div class="meta">
+            <span><strong>Reporter:</strong> Amina Yusuf</span>
+            <span><strong>Status:</strong> New</span>
+            <span><strong>Date:</strong> 2025-07-02</span>
+          </div>
+          <button onclick="location.href='chief_case_detail.html'">View Details</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- JavaScript for dynamic content loading -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch('chief_dashboard.php')
+      .then(res => res.json()) // Parse JSON response
+      .then(data => {
+        // Update stats
+        const stats = data.stats;
+        const statsElems = document.querySelectorAll(".stat");
+        statsElems[0].querySelector("h3").textContent = stats.total;
+        statsElems[1].querySelector("h3").textContent = stats.pending;
+        statsElems[2].querySelector("h3").textContent = stats.resolved;
+
+        // Render recent cases dynamically
+        const container = document.querySelector(".cases-grid");
+        container.innerHTML = "";
+
+        data.recent.forEach((caseData) => {
+          const div = document.createElement("div");
+          div.className = "case-card";
+          div.innerHTML = `
+            <h4>Case ${caseData.id}: ${caseData.subject}</h4>
+            <div class="meta">
+              <span><strong>Reporter:</strong> ${caseData.contact_number}</span>
+              <span><strong>Status:</strong> ${caseData.status}</span>
+              <span><strong>Date:</strong> ${caseData.date_submitted}</span>
+            </div>
+            <button onclick="location.href='chief_case_detail.html?id=${caseData.id}'">View Details</button> <!-- Button to view case details -->
+          `;
+          container.appendChild(div);
+        });
+      })
+      .catch(error => { // Catch and log any errors during fetch
+        console.error("Failed to load chief dashboard:", error);
+      });
+  });
+</script>
+
+</body>
+</html>

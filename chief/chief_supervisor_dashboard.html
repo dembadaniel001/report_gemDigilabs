@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chief Executive Dashboard - North Gem</title>
+  <style>
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --white: #FFF;
+      --gray: #f5f5f5;
+      --dark: #333;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--gray);
+      color: var(--dark);
+    }
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    nav a {
+      color: var(--white);
+      margin-left: 20px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .filter-row {
+      margin-bottom: 20px;
+    }
+    .filter-row input {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .section-title {
+      font-size: 1.3em;
+      color: var(--green);
+      margin-top: 30px;
+      border-bottom: 2px solid var(--green);
+      padding-bottom: 5px;
+    }
+
+    .dashboard-cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 200px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s;
+    }
+
+    .card:hover {
+      background: #eafae5;
+      transform: scale(1.02);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 2.2em;
+      color: var(--green);
+    }
+
+    .card p {
+      margin-top: 8px;
+      font-size: 1em;
+      color: var(--dark);
+    }
+
+    .admin-actions {
+      margin-top: 40px;
+    }
+
+    .admin-actions .card p {
+      font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+      .dashboard-cards {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Chief Supervisor Dashboard</h1>
+    <nav>
+      <a href="chief_audit_logs.html">Audit Logs</a>
+      <a href="chief_registration.html">Add User</a>
+      <a href="chief_manage_users.html">Manage Users</a>
+      <a href="chief_case_report.html">Reports</a>
+      <a href="chief_logout.php">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- Month Filter -->
+    <div class="filter-row">
+      <label for="monthFilter"><strong>Select Month:</strong></label>
+      <input type="month" id="monthFilter" value="2025-06">
+    </div>
+
+    <!-- Category Summary Cards -->
+    <div class="section-title">Cases by Category (North Gem)</div>
+    <div class="dashboard-cards">
+      <div class="card" onclick="window.location.href='chief_land_report.html'">
+        <h2>35</h2>
+        <p>Land Dispute</p>
+      </div>
+      <div class="card" onclick="window.location.href='chief_livestock_theft.html'">
+        <h2>22</h2>
+        <p>Livestock Theft</p>
+      </div>
+      <div class="card" onclick="window.location.href='chief_unauthorized_land.html'">
+        <h2>18</h2>
+        <p>Unauthorized Land Use</p>
+      </div>
+      <div class="card" onclick="window.location.href='chief_other.html'">
+        <h2>15</h2>
+        <p>Other</p>
+      </div>
+    </div>
+
+    <!-- Supervisor Tools Section -->
+    <div class="section-title">Supervisor Tools</div>
+    <div class="dashboard-cards admin-actions">
+      <div class="card" onclick="window.location.href='chief_registration.html'">
+        <h2>➕</h2>
+        <p>Add New User</p>
+      </div>
+      <div class="card" onclick="window.location.href='chief_manage_users.html'">
+        <h2>🛠</h2>
+        <p>Manage Users</p>
+      </div>
+      <div class="card" onclick="window.location.href='chief_cases.html'">
+        <h2>✅</h2>
+        <p>Change Case Status</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

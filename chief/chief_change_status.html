@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /> <!-- Character encoding for the document -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- Responsive viewport settings -->
+  <title>Change Case Status</title> <!-- Title of the web page -->
+  <style>
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --white: #ffffff;
+      --gray: #f2f2f2;
+      --dark: #333;
+    }
+    body {
+      margin: 0; /* Remove default body margin */
+      font-family: Arial, sans-serif; /* Set font family */
+      background: var(--gray); /* Background color from CSS variable */
+      color: var(--dark); /* Text color from CSS variable */
+    }
+    header {
+      background: var(--green); /* Header background color */
+      color: var(--white); /* Header text color */
+      padding: 20px; /* Padding around header content */
+      text-align: center; /* Center align header text */
+    }
+    main {
+      padding: 20px; /* Padding for the main content area */
+    }
+    h1, h2 {
+      color: var(--green);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px; /* Space above the table */
+      background: var(--white); /* Table background color */
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Subtle shadow for the table */
+    }
+    th, td {
+      padding: 12px; /* Padding for table cells */
+      text-align: left; /* Left align text in cells */
+      border-bottom: 1px solid #ddd; /* Bottom border for cells */
+    }
+    th {
+      background-color: var(--green); /* Table header background color */
+      color: var(--white); /* Table header text color */
+    }
+    tr:hover {
+      background-color: #f9f9f9; /* Hover effect for table rows */
+    }
+    select, textarea {
+      padding: 6px; /* Padding for select and textarea */
+      border-radius: 4px; /* Rounded corners for select and textarea */
+      border: 1px solid #ccc; /* Border for select and textarea */
+      width: 100%; /* Full width for select and textarea */
+      font-size: 1em; /* Font size for select and textarea */
+    }
+    .btn {
+      padding: 8px 14px; /* Padding for buttons */
+      background: var(--green); /* Button background color */
+      color: var(--white); /* Button text color */
+      border: none; /* No border for buttons */
+      border-radius: 4px; /* Rounded corners for buttons */
+      cursor: pointer; /* Pointer cursor on hover */
+      margin-top: 5px; /* Top margin for buttons */
+    }
+    .btn:hover {
+      background: var(--red);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header section -->
+  <header>
+    <h1>Change Case Status</h1>
+  </header>
+
+  <!-- Main content area -->
+  <main>
+    <h2>Cases Assigned</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>OB Number</th>
+        <th>Subject</th>
+        <th>Current Status</th>
+        <th>New Status</th>
+        <th>Remarks (optional)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="caseTableBody">
+      <!-- Case data will be dynamically filled by JavaScript -->
+    </tbody>
+  </table>
+  </main>
+
+  <script>
+    // Event listener for when the DOM is fully loaded
+    document.addEventListener("DOMContentLoaded", () => {
+      // Fetch case data from the backend PHP script
+      fetch("chief_load_cases.php")
+        .then(res => res.json()) // Parse the JSON response
+        .then(data => {
+          const tbody = document.getElementById("caseTableBody");
+          tbody.innerHTML = ""; // Clear any existing content
+
+          // Iterate over each case and create a table row
+          data.forEach((c, index) => {
+            const row = document.createElement("tr");
+
+            // Populate the row with case details and status update controls
+            row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${c.ob_number}</td>
+          <td>${c.subject}</td>
+          <td>${c.status}</td>
+          <td>
+            <select id="status-${c.id}">
+              <option value="">--Choose--</option>
+              <option value="New">New</option>
+              <option value="Pending">Pending</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </td>
+          <td><textarea id="remarks-${c.id}" rows="1" placeholder="Optional remarks"></textarea></td>
+          <td><button class="btn" onclick="updateStatus(${c.id})">Update</button></td> <!-- Update button -->
+        `;
+            tbody.appendChild(row); // Add the row to the table body
+          });
+        })
+        .catch(err => {
+          // Handle errors during fetch operation
+          document.getElementById("caseTableBody").innerHTML = "<tr><td colspan='7'>Error loading cases</td></tr>";
+          console.error(err); // Log the error to the console
+        });
+    });
+
+    // Function to update case status
+    function updateStatus(caseId) {
+      const newStatus = document.getElementById(`status-${caseId}`).value; // Get selected new status
+      const remarks = document.getElementById(`remarks-${caseId}`).value; // Get remarks
+
+      if (!newStatus) {
+        alert("Please select a new status."); // Alert if no status is selected
+        return;
+      }
+
+      // Send a POST request to update the case status
+      fetch("chief_update_status.php", {
+        method: "POST", // HTTP method
+        headers: {'Content-Type': 'application/json'}, // Specify content type as JSON
+        body: JSON.stringify({ case_id: caseId, new_status: newStatus, remarks: remarks }) // Request body as JSON string
+      })
+      .then(res => res.json()) // Parse JSON response
+      .then(resp => {
+        if (resp.success) {
+          alert("Case status updated."); // Success message
+          location.reload(); // Reload the page to show updated status
+        } else {
+          alert("Failed to update case."); // Failure message
+        }
+      })
+      .catch(err => {
+        console.error(err); // Log error to console
+        alert("Error while updating."); // Alert user about update error
+      });
+    }
+  </script>
+</body>
+</html>

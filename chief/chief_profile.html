@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chief Profile</title>
+  <style>
+    /* Color Scheme */
+    :root {
+      --dull-red: #A52A2A;           /* Dull red for accents */
+      --muted-green: #006600;        /* Muted green for buttons and navigation */
+      --black: #000;
+      --white: #FFF;
+      --light-gray: #f2f2f2;
+    }
+
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--black);
+    }
+
+    /* Header with Navigation */
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    header nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: var(--white);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Profile Form Styling */
+    .profile-form {
+      width: 100%;
+    }
+    .profile-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--muted-green);
+    }
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+    }
+    .form-group input[readonly] {
+      background: #eee;
+    }
+    
+    .update-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .update-btn:hover {
+      background: var(--dull-red);
+    }
+    
+    .change-password {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .change-password a {
+      color: var(--muted-green);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .change-password a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5em;
+      }
+      header nav a {
+        font-size: 0.9em;
+        margin-left: 10px;
+      }
+      .container {
+        margin: 15px;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Navigation -->
+  <header>
+    <h1>Profile</h1>
+     <nav>
+      <a href="chief_dashboard.html">Home</a>
+      <a href="chief_cases.html">All Cases</a>
+      <a href="chief_case_entry.html">Manual Entry</a>
+      <a href="chief_user_management.html">User Management</a>
+      <a href="chief_audit_logs.html">Audit Logs</a>
+      <a href="chief_profile.html">Profile</a>
+      <a href="chief_logout.php">Logout</a>
+    </nav>
+  </header>
+  
+  <!-- Main Container for Profile Form -->
+  <div class="container">
+    <form class="profile-form" action="/chief/update-profile" method="POST">
+      <h2>Chief Profile</h2>
+      
+      <div class="form-group">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" value="Chief John Doe" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" value="chief.johndoe@example.com" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="officeId">Office ID:</label>
+        <input type="text" id="officeId" name="officeId" value="CH-001" readonly>
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" value="+254712345678" required>
+      </div>
+      
+      <button type="submit" class="update-btn">Update Profile</button>
+    </form>
+    
+    <div class="change-password">
+      <a href="chief_change_password.html">Change Password</a>
+    </div>
+  </div>
+</body>
+</html>

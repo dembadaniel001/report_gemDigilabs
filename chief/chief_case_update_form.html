@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update Case - Chief</title>
+  <style>
+    /* CSS Variables for color palette */
+    :root {
+      --dull-red: #A52A2A;
+      --muted-green: #006600;
+      --black: #000;
+      --white: #FFF;
+      --light-gray: #f2f2f2;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--black);
+    }
+    /* Header styling */
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    header h1 { margin: 0; font-size: 1.8em; }
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    header nav a:hover { text-decoration: underline; }
+    /* Main container styling */
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: var(--white);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    }
+    .form-title {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--muted-green);
+      font-size: 1.8em;
+    }
+    /* Form layout */
+    .update-form {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label { margin-bottom: 5px; font-weight: bold; }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+    }
+    /* Submit button styling */
+    .submit-btn {
+      padding: 12px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .submit-btn:hover { background: var(--dull-red); }
+    /* Responsive adjustments */
+    @media (max-width:600px) {
+      header h1 { font-size:1.5em; }
+      header nav a { font-size:0.9em; margin-left:10px; }
+      .container { margin:15px; padding:15px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with navigation links -->
+  <header>
+    <h1>Chief Dashboard</h1>
+    <nav>
+      <a href="chief_dashboard.html">Home</a>
+      <a href="chief_cases.html">All Cases</a>
+      <a href="chief_case_entry.html">Manual Entry</a>
+      <a href="chief_audit_logs.html">Audit Logs</a>
+      <a href="chief_profile.html">Profile</a>
+      <a href="chief_logout.php">Logout</a>
+    </nav>
+  </header>
+  
+  <!-- Main content container -->
+  <div class="container">
+    <div class="form-title">Update Case</div>
+    <!-- Case update form -->
+    <form class="update-form" action="update_case.php" method="POST">
+      <!-- Case ID (readonly, filled by JS) -->
+      <div class="form-group">
+        <label for="caseId">Case ID:</label>
+        <input type="text" id="caseId" name="caseId" readonly>
+      </div>
+      <!-- Status dropdown -->
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="New">New</option>
+          <option value="Pending">Pending</option>
+          <option value="Resolved">Resolved</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+      <!-- Additional notes textarea -->
+      <div class="form-group">
+        <label for="notes">Additional Notes:</label>
+        <textarea id="notes" name="notes" rows="4" placeholder="Enter case updates, remarks or actions taken"></textarea>
+      </div>
+      <!-- Submit button -->
+      <button type="submit" class="submit-btn">Submit Update</button>
+    </form>
+  </div>
+
+  <script>
+    // Read case_id from query string and inject into form
+    const urlParams = new URLSearchParams(window.location.search);
+    const caseId = urlParams.get('case_id');
+    if (caseId) {
+      document.getElementById('caseId').value = caseId;
+    }
+  </script>
+</body>
+</html>

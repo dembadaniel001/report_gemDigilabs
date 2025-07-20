@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Occurrence</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    form input[type="text"],
+    form input[type="date"],
+    form input[type="time"],
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    form input[disabled] {
+      background: #e9ecef;
+      cursor: not-allowed;
+    }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #007BFF;
+      border: none;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .submit-btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Edit Occurrence</h2>
+    <form id="editOccurrenceForm" method="POST" action="/edit-occurrence">
+      <!-- OB Number: Immutable, read-only -->
+      <label for="obNumber">OB Number</label>
+      <input type="text" id="obNumber" name="obNumber" value="OB-001" disabled>
+      
+      <!-- Reference Number (if any) -->
+      <label for="referenceNumber">Reference Number (if any)</label>
+      <input type="text" id="referenceNumber" name="referenceNumber" value="REF-123">
+
+      <!-- Occurrence Date -->
+      <label for="occurrenceDate">Occurrence Date</label>
+      <input type="date" id="occurrenceDate" name="occurrenceDate" value="2025-06-01" required>
+      
+      <!-- Occurrence Time -->
+      <label for="occurrenceTime">Occurrence Time (HH:MM)</label>
+      <input type="time" id="occurrenceTime" name="occurrenceTime" value="14:35" required>
+      
+      <!-- Case File Number (if any) -->
+      <label for="caseFileNumber">Case File Number (if any)</label>
+      <input type="text" id="caseFileNumber" name="caseFileNumber" value="CF-456">
+      
+      <!-- Nature of Occurrence -->
+      <label for="natureOfOccurrence">Nature of Occurrence</label>
+      <input type="text" id="natureOfOccurrence" name="natureOfOccurrence" value="Theft" required>
+      
+      <!-- Remarks -->
+      <label for="remarks">Remarks</label>
+      <textarea id="remarks" name="remarks" placeholder="Enter any additional remarks" required>
+Item stolen from premises. Additional details updated here.
+      </textarea>
+      
+      <!-- Submit Button -->
+      <button type="submit" class="submit-btn">Update Occurrence</button>
+    </form>
+  </div>
+</body>
+</html>

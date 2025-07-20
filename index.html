@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>North Gem Ward | Official Portal</title>
+  <style>
+    /* CSS Variables for color palette */
+    :root {
+      --muted-green: #006600;
+      --dull-red: #A52A2A;
+      --white: #FFF;
+      --black: #000;
+      --light-gray: #f2f2f2;
+    }
+
+    /* Reset default browser styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body styling */
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--black);
+    }
+
+    /* Header styling */
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 10; /* Makes sure header stacks above slideshow */
+    }
+
+    header h1 {
+      font-size: 1.8em;
+    }
+
+    /* Navigation links styling */
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Slideshow container styling */
+    .slideshow {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      margin-top: 0;
+    }
+
+    /* Individual slide styling */
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+      z-index: 2;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Caption styling for slides */
+    .caption {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--white);
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    /* Footer styling */
+    footer {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    /* Responsive styles for smaller screens */
+    @media (max-width: 768px) {
+      .slideshow {
+        height: 300px;
+      }
+
+      header h1 {
+        font-size: 1.5em;
+      }
+
+      nav a {
+        margin-left: 10px;
+        font-size: 0.95em;
+      }
+    }
+
+    /* Navigation and dropdown styles */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    nav a,
+    .dropbtn {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 1em;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    nav a:hover,
+    .dropbtn:hover {
+      text-decoration: underline;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    /* Dropdown content hidden by default */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: var(--white);
+      min-width: 180px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      top: 35px; /* Position below the button */
+      left: 0;
+      z-index: 1000;
+    }
+
+    /* Dropdown links styling */
+    .dropdown-content a {
+      color: var(--black);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header with navigation -->
+  <header>
+    <h1>North Gem Ward</h1>
+    <nav class="nav-links">
+      <a href="public/public_dashboard.html">Public Portal</a>
+      <!-- Dropdown for administrative portals -->
+      <div class="dropdown">
+        <button class="dropbtn" onclick="toggleDropdown()">Administrative Portal ▾</button>
+        <div class="dropdown-content" id="adminDropdown">
+          <a href="chief/chief_login.html">Chief Portal</a>
+          <a href="police/homepage.html">Police Portal</a>
+          <a href="mp/mp_login.html">MP Staff Portal</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Slideshow section -->
+  <div class="slideshow">
+    <!-- Static fallback slide; dynamic slides will be inserted via JS -->
+    <div class="slide active">
+      <img src="mp/images/default.jpg" alt="Default Slide">
+      <div class="caption">Welcome to North Gem Ward</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 North Gem Ward | Empowering Development for All
+  </footer>
+
+  <!-- Slideshow rotation script (for fallback slide) -->
+  <script>
+    // Get all slides and set up rotation
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+
+    function showNextSlide() {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+
+    setInterval(showNextSlide, 4000);
+  </script>
+
+  <!-- Fetch dynamic slides from server and update slideshow -->
+  <script>
+    fetch('get_slides.php')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success || !Array.isArray(data.slides)) return;
+
+        const slideshow = document.querySelector('.slideshow');
+        slideshow.innerHTML = ''; // Clear fallback
+
+        // Add slides from server data
+        data.slides.forEach((slide, index) => {
+          const div = document.createElement('div');
+          div.className = 'slide' + (index === 0 ? ' active' : '');
+          div.innerHTML = `
+            <img src="mp/images/${slide.image_path}" alt="Slide Image">
+            <div class="caption">${slide.caption}</div>
+          `;
+          slideshow.appendChild(div);
+        });
+
+        // Re-run slideshow rotation for new slides
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        setInterval(() => {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 4000);
+      })
+      .catch(err => console.error('Failed to load slides:', err));
+  </script>
+
+  <!-- Dropdown toggle and close logic -->
+  <script>
+    // Toggle dropdown visibility on button click
+    function toggleDropdown() {
+      const dropdown = document.getElementById("adminDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    // Close the dropdown if clicked outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        const dropdown = document.getElementById("adminDropdown");
+        if (dropdown && dropdown.style.display === "block") {
+          dropdown.style.display = "none";
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

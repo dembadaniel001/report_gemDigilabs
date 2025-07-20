@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Audit Logs</title>
+  <style>
+    :root {
+      --police-blue: #003366;
+      --police-gold: #FFD700;
+      --police-red: #d7261e;
+      --light-bg: #f8f9fa;
+      --border: #dee2e6;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header, nav {
+      background-color: var(--police-blue);
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--police-blue);
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .search-bar input[type="text"] {
+      width: 300px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px 0 0 3px;
+      outline: none;
+    }
+
+    .search-bar button {
+      padding: 8px 12px;
+      border: 1px solid var(--police-blue);
+      background: var(--police-blue);
+      color: white;
+      border-radius: 0 3px 3px 0;
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      background: var(--police-gold);
+      border-color: var(--police-gold);
+      color: black;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    table thead {
+      background: var(--police-blue);
+      color: white;
+    }
+
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .highlight-today {
+      background-color: #fff8dc !important;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--police-blue);
+      }
+
+      .nav-links a {
+        padding: 10px;
+        border-top: 1px solid var(--police-gold);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-bar input[type="text"],
+      .search-bar button {
+        width: 100%;
+        border-radius: 3px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="nav-links" id="navLinks">
+      <a href="admin_dashboard.html">Dashboard</a>
+      <a href="manage_officers.html">Manage Officers</a>
+      <a href="occurrence_records_admin.html">Occurrence Records</a>
+      <a href="audit_logs.html">Audit Logs</a>
+      <a href="logout.php">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Audit Logs</h2>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by officer or action...">
+      <button type="button" onclick="searchLogs()">Search</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Officer ID</th>
+          <th>Officer Name</th>
+          <th>Badge Number</th>
+          <th>Rank</th>
+          <th>Action</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="logsBody">
+        <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("active");
+    }
+
+    function searchLogs() {
+      const term = document.getElementById("searchInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#logsBody tr");
+
+      rows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+        row.style.display = rowText.includes(term) ? "" : "none";
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("get_audit_logs.php")
+        .then(response => response.json())
+        .then(data => {
+          const tbody = document.getElementById("logsBody");
+          tbody.innerHTML = "";
+
+          if (data.success && data.logs.length > 0) {
+            const today = new Date().toISOString().slice(0, 10);
+
+            data.logs.forEach(log => {
+              const row = document.createElement("tr");
+
+              if (log.timestamp.startsWith(today)) {
+                row.classList.add("highlight-today");
+              }
+
+              row.innerHTML = `
+                <td>${log.timestamp}</td>
+                <td>${log.officer_id}</td>
+                <td>${log.fullname}</td>
+                <td>${log.badge_number}</td>
+                <td>${log.rank}</td>
+                <td>${log.action}</td>
+                <td>${log.description}</td>
+              `;
+
+              tbody.appendChild(row);
+            });
+          } else {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No audit logs found.</td></tr>`;
+          }
+        })
+        .catch(error => {
+          console.error("Error loading logs:", error);
+          document.getElementById("logsBody").innerHTML = `<tr><td colspan="7" style="text-align:center;">Error loading logs.</td></tr>`;
+        });
+    });
+  </script>
+</body>
+</html>

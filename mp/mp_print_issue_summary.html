@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Issue Summary – Print</title>
+  <style>
+    :root {
+      --muted-green: #006600;
+      --black:      #000;
+    }
+    body {
+      margin: 20px;
+      font-family: Arial, sans-serif;
+      color: var(--black);
+    }
+    h1 {
+      text-align: center;
+      color: var(--muted-green);
+      margin-bottom: 20px;
+    }
+    .summary {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 6px;
+    }
+    .summary p {
+      margin: 8px 0;
+      font-size: 0.95em;
+    }
+    .label {
+      font-weight: bold;
+    }
+    .updates {
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+    .updates li {
+      margin-bottom: 5px;
+    }
+    .print-btn {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .print-btn button {
+      padding: 10px 20px;
+      background: var(--muted-green);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    @media print {
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-btn">
+    <button onclick="window.print()">Print Issue Summary</button>
+  </div>
+  <h1>Issue Summary</h1>
+  <div class="summary">
+    <p><span class="label">Issue ID:</span> 201</p>
+    <p><span class="label">Subject:</span> Road Maintenance</p>
+    <p><span class="label">Date Submitted:</span> 2025-06-25</p>
+    <p><span class="label">Status:</span> Pending</p>
+    <p><span class="label">Description:</span> Severe potholes on main access road causing delays and accidents.</p>
+    <p class="label">Updates:</p>
+    <ul class="updates">
+      <li>2025-06-25 10:05: Issue created.</li>
+      <li>2025-06-26 09:45: Status updated to Pending.</li>
+    </ul>
+  </div>
+</body>
+</html>

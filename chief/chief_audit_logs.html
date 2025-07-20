@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit Logs - Chief</title>
+  <style>
+    /* Color Scheme */
+    :root {
+      --dull-red: #A52A2A;         /* Dull red for accents */
+      --muted-green: #006600;      /* Muted green for backgrounds, buttons, and headings */
+      --black: #000;
+      --white: #FFF;
+      --light-gray: #f2f2f2;
+    }
+    
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--light-gray);
+      color: var(--black);
+    }
+
+    /* Header with Navigation */
+    header {
+      background: var(--muted-green);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    header nav a {
+      color: var(--white);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 1em;
+    }
+    header nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    }
+    .page-title {
+      color: var(--muted-green);
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    /* Audit Logs Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th,
+    table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    table th {
+      background: var(--muted-green);
+      color: var(--white);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5em;
+      }
+      header nav a {
+        font-size: 0.9em;
+        margin-left: 10px;
+      }
+      .container {
+        margin: 15px;
+        padding: 15px;
+      }
+      table th, table td {
+        padding: 8px;
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with Navigation -->
+  <header>
+    <h1>Audit Logs</h1>
+    <nav>
+      <!-- Navigation Links -->
+      <a href="chief_dashboard.html">Home</a>
+      <a href="chief_cases.html">All Cases</a>
+      <a href="chief_case_entry.html">Manual Entry</a>
+      <a href="chief_user_management.html">User Management</a>
+      <a href="chief_audit_logs.html">Audit Logs</a>
+      <a href="chief_profile.html">Profile</a>
+      <a href="chief_logout.php">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Main Container for Content -->
+  <div class="container">
+    <!-- Page Title -->
+    <div class="page-title">Audit Logs</div>
+    
+    <!-- Audit Logs Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Log ID</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Date & Time</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example Audit Log Row -->
+        <tr>
+          <td>001</td>
+          <td>Chief John Doe</td>
+          <td>Updated Case Status</td>
+          <td>2025-07-01 10:15 AM</td>
+          <td>Status of Case 101 changed from New to Pending.</td>
+        </tr>
+        <tr>
+          <td>002</td>
+          <td>Admin</td>
+          <td>Login</td>
+          <td>2025-07-01 09:45 AM</td>
+          <td>Admin logged into the system.</td>
+        </tr>
+        <tr>
+          <td>003</td>
+          <td>Chief John Doe</td>
+          <td>Updated Profile</td>
+          <td>2025-06-30 04:30 PM</td>
+          <td>Profile information updated successfully.</td>
+        </tr>
+        <tr>
+          <td>004</td>
+          <td>Chief John Doe</td>
+          <td>Reviewed Audit Logs</td>
+          <td>2025-07-01 11:00 AM</td>
+          <td>Chief viewed audit logs.</td>
+        </tr>
+        <!-- Additional audit log rows can be added here -->
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

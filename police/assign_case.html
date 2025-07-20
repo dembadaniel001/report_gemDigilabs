@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assign Case</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background: #e6e6e6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+      border-top: 5px solid #001f3f; /* Kenya Police Navy Blue */
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #b22222; /* Kenya Police Red */
+    }
+
+    form label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+      color: #001f3f;
+    }
+
+    form input[type="text"],
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      background-color: #fff;
+      color: #001f3f;
+      font-weight: bold;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    form input[readonly] {
+      background: #f8f9fa;
+    }
+
+    select:hover {
+      border-color: #b22222;
+      box-shadow: 0 0 5px rgba(178, 34, 34, 0.5);
+    }
+
+    select option {
+      background-color: #ffffff;
+      color: #001f3f;
+      padding: 10px;
+    }
+
+    select option:hover {
+      background-color: #b22222;
+      color: #ffffff;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #001f3f;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #b22222;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Assign Case</h2>
+    <form id="assignCaseForm" method="POST" action="assign_case.php">
+      <!-- Display OB Number as read-only -->
+      <label for="obNumber">OB Number</label>
+      <input type="text" id="obNumber" name="obNumber" value="OB-001" readonly>
+
+      <!-- Optionally display basic occurrence details -->
+      <label for="occurrenceNature">Nature of Occurrence</label>
+      <input type="text" id="occurrenceNature" name="occurrenceNature" value="Theft" readonly>
+
+      <!-- Officer selection dropdown -->
+      <label for="officerSelect">Assign to Officer</label>
+      <select id="officerSelect" name="officerId" required>
+        <option value="">Select an officer...</option>
+      </select>
+
+      <!-- Additional remarks (optional) -->
+      <label for="assignmentRemarks">Remarks (optional)</label>
+      <textarea id="assignmentRemarks" name="assignmentRemarks" rows="4" placeholder="Add any remarks regarding the case assignment"></textarea>
+
+      <!-- Submit button -->
+      <button type="submit" class="submit-btn">Assign Case</button>
+    </form>
+  </div>
+
+  <!-- Load occurrence details -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const obNumber = urlParams.get("ob");
+
+      if (obNumber) {
+        document.getElementById("obNumber").value = obNumber;
+
+        fetch(`get_occurrence.php?ob_number=${encodeURIComponent(obNumber)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              document.getElementById("occurrenceNature").value = data.nature;
+            } else {
+              alert("Nature not found for OB number.");
+            }
+          })
+          .catch(err => {
+            console.error("Error fetching occurrence data:", err);
+            alert("Failed to fetch occurrence details.");
+          });
+      }
+    });
+  </script>
+
+  <!-- Submit form handler -->
+  <script>
+    document.getElementById("assignCaseForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch("assign_case.php", {
+        method: "POST",
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          if (data.success) {
+            window.location.href = "occurrence_records_admin.html";
+          }
+        })
+        .catch(error => {
+          console.error("Assignment error:", error);
+          alert("An error occurred while assigning the case.");
+        });
+    });
+  </script>
+
+  <!-- Load active officers -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("fetch_officers.php")
+        .then(response => response.json())
+        .then(officers => {
+          const select = document.getElementById("officerSelect");
+          officers.forEach(officer => {
+            const option = document.createElement("option");
+            option.value = officer.badge_number;
+            option.textContent = `${officer.fullname} (Badge: ${officer.badge_number}, Rank: ${officer.rank})`;
+            select.appendChild(option);
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching officers:", error);
+          alert("Failed to load officers.");
+        });
+    });
+  </script>
+</body>
+</html>

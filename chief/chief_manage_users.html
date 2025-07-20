@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Chief Users</title>
+  <style>
+    :root {
+      --green: #006600;
+      --red: #A52A2A;
+      --white: #ffffff;
+      --gray: #f2f2f2;
+      --dark: #333;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--gray);
+      color: var(--dark);
+    }
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 { margin: 0; }
+    main { padding: 20px; }
+    h2 { color: var(--green); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: var(--white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: var(--green);
+      color: var(--white);
+    }
+    tr:hover { background-color: #f9f9f9; }
+
+    select {
+      padding: 4px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      color: var(--white);
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    .btn-save { background-color: #28a745; }
+    .btn-deactivate { background-color: var(--red); }
+    .btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Manage Chief Users</h1>
+  </header>
+
+  <main>
+    <h2>User List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Full Name</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <tr><td colspan="6">Loading users...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("manage_users_chief.php")
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log("Fetched users:", data); // Debug output
+          const tbody = document.getElementById("userTableBody");
+          tbody.innerHTML = "";
+
+          if (data.error) {
+            tbody.innerHTML = `<tr><td colspan="6">❌ ${data.error}</td></tr>`;
+            return;
+          }
+
+          if (data.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='6'>No users found.</td></tr>";
+            return;
+          }
+
+          data.forEach((user, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${user.fullname}</td>
+              <td>${user.username}</td>
+              <td>
+                <select onchange="changeRole(${user.id}, this.value)">
+                  <option value="chief" ${user.role === 'chief' ? 'selected' : ''}>Chief</option>
+                  <option value="chief_supervisor" ${user.role === 'chief_supervisor' ? 'selected' : ''}>Chief Supervisor</option>
+                </select>
+              </td>
+              <td>${user.status === '1' ? 'Active' : 'Inactive'}</td>
+              <td>
+                <button class="btn btn-deactivate" onclick="toggleStatus(${user.id})">
+                  ${user.status === '1' ? 'Deactivate' : 'Activate'}
+                </button>
+              </td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(err => {
+          console.error("Failed to load users:", err);
+          document.getElementById("userTableBody").innerHTML =
+            "<tr><td colspan='6'>⚠ Error loading users. Check backend or network.</td></tr>";
+        });
+    });
+
+    function changeRole(userId, newRole) {
+      fetch(`update_user_role.php?id=${userId}&role=${newRole}`)
+        .then(res => res.text())
+        .then(response => {
+          alert("✅ Role updated successfully");
+        })
+        .catch(err => {
+          alert("❌ Failed to update role.");
+          console.error(err);
+        });
+    }
+
+    function toggleStatus(userId) {
+      fetch(`toggle_user_status.php?id=${userId}`)
+        .then(() => location.reload())
+        .catch(err => {
+          alert("❌ Failed to update status.");
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
